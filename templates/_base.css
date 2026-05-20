@@ -1,0 +1,550 @@
+/* =============================================================
+   COLLECTION YEELEN · BASE CSS PARTAGÉE
+   Variables de couleurs surchargées par chaque charte
+   ============================================================= */
+
+@page { size: A4; margin: 0; }
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  font-family: 'Lora', 'Source Serif 4', Georgia, serif;
+  color: var(--ink);
+  background: var(--white);
+  font-size: 11pt;
+  line-height: 1.65;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+/* ================ STRUCTURE PAGE ================ */
+.page {
+  width: 210mm; height: 297mm;
+  padding: 25mm 22mm 22mm 22mm;
+  page-break-after: always; page-break-inside: avoid;
+  position: relative; background: var(--white); overflow: hidden;
+}
+.page:last-child { page-break-after: auto; }
+
+/* v2 — Les pages de contenu n'ont pas de hauteur fixe :
+   le contenu détermine la hauteur, Chromium pagine naturellement.
+   On garde page-break-after pour forcer une nouvelle page après chaque section. */
+.content-page {
+  height: auto;
+  min-height: 220mm;
+  overflow: visible;
+}
+
+/* ================ TYPOGRAPHIE ================ */
+h1, h2, h3, h4 {
+  font-family: 'Lora', Georgia, serif;
+  color: var(--primary); font-weight: 600; line-height: 1.2;
+}
+.label, .caption, .meta, .footer-text, .pagenum {
+  font-family: 'Poppins', 'Helvetica Neue', sans-serif;
+}
+p { margin-bottom: 0.7em; text-align: justify; hyphens: auto; }
+strong { font-weight: 600; color: var(--primary); }
+
+/* ================ COUVERTURE ================ */
+.cover {
+  width: 210mm; height: 297mm; padding: 0;
+  background: var(--primary); color: var(--white);
+  position: relative; page-break-after: always; overflow: hidden;
+}
+.cover-bg {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(circle at 80% 15%, var(--accent-glow), transparent 45%),
+    radial-gradient(circle at 15% 85%, var(--accent-soft-glow), transparent 40%),
+    var(--primary);
+}
+.cover-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+.cover-shape {
+  position: absolute; top: 35mm; right: 22mm;
+  width: 50mm; height: 50mm; border-radius: 50%;
+  background: var(--accent); opacity: 0.95;
+}
+.cover-shape::after {
+  content: ''; position: absolute; inset: -15mm;
+  border: 1px solid var(--accent-ring); border-radius: 50%;
+}
+.cover-content {
+  position: relative; height: 100%; padding: 25mm 22mm;
+  display: flex; flex-direction: column; justify-content: space-between;
+}
+.cover-top {
+  font-family: 'Poppins', sans-serif; font-size: 10pt;
+  letter-spacing: 4px; text-transform: uppercase;
+  color: var(--accent); font-weight: 500;
+}
+.cover-top-line {
+  display: inline-block; width: 20mm; height: 1px;
+  background: var(--accent); vertical-align: middle; margin-right: 8px;
+}
+.cover-title-block { margin-top: auto; margin-bottom: 35mm; }
+.cover-volume {
+  font-family: 'Poppins', sans-serif; font-size: 11pt;
+  color: rgba(255,255,255,0.55); letter-spacing: 2px;
+  text-transform: uppercase; margin-bottom: 8mm;
+}
+.cover-title {
+  font-family: 'Lora', serif; font-size: 38pt; font-weight: 500;
+  line-height: 1.05; color: var(--white); letter-spacing: -0.5px;
+  margin-bottom: 8mm; max-width: 145mm;
+}
+.cover-subtitle {
+  font-family: 'Lora', serif; font-style: italic; font-size: 14pt;
+  color: rgba(255,255,255,0.75); font-weight: 400;
+  max-width: 130mm; line-height: 1.4;
+}
+.cover-bottom {
+  border-top: 1px solid rgba(255,255,255,0.15); padding-top: 6mm;
+  display: flex; justify-content: space-between; align-items: flex-end;
+}
+.cover-author { font-family: 'Poppins', sans-serif; }
+.cover-author-name {
+  font-size: 13pt; color: var(--white); font-weight: 500;
+  letter-spacing: 1px; text-transform: uppercase;
+}
+.cover-author-role {
+  font-size: 9pt; color: rgba(255,255,255,0.6);
+  margin-top: 2mm; letter-spacing: 0.5px;
+}
+.cover-brand { text-align: right; font-family: 'Poppins', sans-serif; }
+.cover-brand-name {
+  font-size: 11pt; color: var(--accent); font-weight: 600; letter-spacing: 3px;
+}
+.cover-brand-tag {
+  font-size: 8pt; color: rgba(255,255,255,0.5);
+  margin-top: 2mm; letter-spacing: 1px;
+}
+
+/* ================ EN-TÊTE ET PIED DE PAGE ================ */
+.page-header {
+  position: absolute; top: 12mm; left: 22mm; right: 22mm;
+  display: flex; justify-content: space-between; align-items: center;
+  font-family: 'Poppins', sans-serif; font-size: 8pt;
+  color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase;
+  border-bottom: 0.5px solid var(--line-light); padding-bottom: 4mm;
+}
+.page-header .brand { color: var(--accent-deep); font-weight: 500; }
+.page-footer {
+  position: absolute; bottom: 12mm; left: 22mm; right: 22mm;
+  display: flex; justify-content: space-between; align-items: center;
+  font-family: 'Poppins', sans-serif; font-size: 8pt; color: var(--muted);
+}
+.page-footer .pagenum { font-weight: 500; color: var(--primary); }
+
+/* ================ AUTEUR / PRÉFACE ================ */
+.author-page { padding-top: 28mm; }
+.author-eyebrow {
+  font-family: 'Poppins', sans-serif; font-size: 9pt;
+  letter-spacing: 3px; text-transform: uppercase;
+  color: var(--accent-deep); margin-bottom: 5mm;
+}
+.author-title {
+  font-size: 28pt; font-weight: 500; color: var(--primary);
+  letter-spacing: -0.5px; line-height: 1.05; margin-bottom: 10mm;
+}
+.author-grid {
+  display: grid; grid-template-columns: 50mm 1fr; gap: 10mm; margin-top: 4mm;
+}
+.author-photo {
+  width: 50mm; height: 50mm; border-radius: 4px;
+  background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-light-2) 100%);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Lora', serif; font-size: 28pt;
+  color: var(--primary); font-weight: 600; position: relative;
+}
+.author-photo::after {
+  content: ''; position: absolute; bottom: -3mm; right: -3mm;
+  width: 16mm; height: 16mm; background: var(--accent);
+  border-radius: 4px; z-index: -1;
+}
+.author-bio p { font-size: 10pt; line-height: 1.6; margin-bottom: 3mm; text-align: left; }
+.author-bio p.lead {
+  font-size: 11pt; font-family: 'Lora', serif; font-style: italic;
+  color: var(--primary); border-left: 3px solid var(--accent);
+  padding-left: 5mm; margin-bottom: 5mm; line-height: 1.5;
+}
+.author-credits {
+  margin-top: 7mm; padding-top: 5mm; border-top: 0.5px solid var(--line);
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 6mm;
+}
+.credit-num {
+  font-family: 'Lora', serif; font-size: 22pt;
+  font-weight: 600; color: var(--accent-deep); line-height: 1;
+}
+.credit-label {
+  font-family: 'Poppins', sans-serif; font-size: 8pt;
+  color: var(--ink-soft); margin-top: 2mm; line-height: 1.4;
+}
+.author-socials {
+  margin-top: 7mm; display: flex; flex-wrap: wrap; gap: 3mm;
+}
+.social-pill {
+  font-family: 'Poppins', sans-serif; font-size: 8pt;
+  background: var(--paper); border: 0.5px solid var(--line);
+  padding: 2mm 4mm; border-radius: 100px; color: var(--ink-soft);
+}
+.social-pill strong { color: var(--primary); }
+
+/* ================ SOMMAIRE ================ */
+.toc-page { padding-top: 25mm; }
+.toc-eyebrow {
+  font-family: 'Poppins', sans-serif; font-size: 9pt;
+  letter-spacing: 3px; text-transform: uppercase;
+  color: var(--accent-deep); margin-bottom: 3mm;
+}
+.toc-title { font-size: 26pt; font-weight: 500; color: var(--primary); margin-bottom: 3mm; }
+.toc-intro {
+  font-family: 'Lora', serif; font-style: italic; color: var(--ink-soft);
+  font-size: 10pt; max-width: 130mm; margin-bottom: 6mm;
+  padding-bottom: 4mm; border-bottom: 0.5px solid var(--line);
+}
+.toc-chapter {
+  display: grid; grid-template-columns: 14mm 1fr 14mm;
+  gap: 4mm; align-items: baseline; padding: 2.5mm 0;
+  border-bottom: 0.5px solid var(--line-light);
+}
+.toc-chapter:last-child { border-bottom: none; }
+.toc-num {
+  font-family: 'Lora', serif; font-size: 16pt;
+  color: var(--accent); font-weight: 500; letter-spacing: -0.5px;
+}
+.toc-titles { display: flex; flex-direction: column; }
+.toc-chap-title {
+  font-family: 'Lora', serif; font-size: 12pt; font-weight: 500;
+  color: var(--primary); margin-bottom: 1mm;
+}
+.toc-chap-sub {
+  font-family: 'Poppins', sans-serif; font-size: 8pt;
+  color: var(--muted); letter-spacing: 0.3px; line-height: 1.4;
+}
+.toc-page-num {
+  font-family: 'Poppins', sans-serif; font-size: 10pt;
+  color: var(--ink-soft); text-align: right; font-weight: 500;
+}
+.toc-section-divider {
+  font-family: 'Poppins', sans-serif; font-size: 8.5pt;
+  letter-spacing: 3px; text-transform: uppercase;
+  color: var(--accent-deep); margin: 5mm 0 3mm 0;
+  padding-bottom: 2mm; border-bottom: 1px solid var(--accent);
+  display: inline-block;
+}
+
+/* ================ OUVERTURE DE CHAPITRE ================ */
+.chapter-opener {
+  padding: 0; background: var(--primary); color: var(--white);
+  position: relative; overflow: hidden;
+}
+.chapter-opener .page-header { display: none; }
+.chapter-opener::before {
+  content: ''; position: absolute; inset: 0;
+  background-image:
+    radial-gradient(circle at 90% 10%, var(--accent-glow-soft), transparent 50%),
+    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: auto, 50px 50px, 50px 50px;
+  pointer-events: none;
+}
+.chapter-opener-top {
+  position: relative; z-index: 1; padding: 38mm 22mm 0 22mm;
+}
+.chapter-opener-eyebrow {
+  font-family: 'Poppins', sans-serif; font-size: 9pt;
+  letter-spacing: 4px; text-transform: uppercase;
+  color: var(--accent); font-weight: 500;
+}
+.chapter-opener-num {
+  font-family: 'Lora', serif; font-size: 95pt; line-height: 1;
+  color: var(--accent); margin: 5mm 0 4mm 0;
+  letter-spacing: -3px; font-weight: 400;
+}
+.chapter-opener-title {
+  font-family: 'Lora', serif; font-size: 30pt; line-height: 1.1;
+  color: var(--white); font-weight: 500; max-width: 150mm;
+  letter-spacing: -0.5px; margin-bottom: 6mm;
+}
+.chapter-opener-rule {
+  width: 25mm; height: 1px; background: var(--accent); margin-bottom: 6mm;
+}
+.chapter-opener-deck {
+  font-family: 'Lora', serif; font-style: italic; font-size: 12pt;
+  color: rgba(255,255,255,0.78); line-height: 1.55; max-width: 145mm;
+}
+.chapter-opener-bottom {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: var(--white); color: var(--ink);
+  padding: 8mm 22mm 12mm 22mm;
+  border-top: 4px solid var(--accent); z-index: 2;
+}
+.chapter-opener-bottom h3 {
+  font-family: 'Poppins', sans-serif; font-size: 9pt;
+  letter-spacing: 3px; text-transform: uppercase;
+  color: var(--accent-deep); font-weight: 500; margin-bottom: 4mm;
+}
+.chapter-opener-bottom ul { list-style: none; padding: 0; }
+.chapter-opener-bottom li {
+  font-family: 'Lora', serif; font-size: 10.5pt; color: var(--primary);
+  padding: 1.5mm 0; border-bottom: 0.5px solid var(--line-light);
+  display: grid; grid-template-columns: 8mm 1fr; align-items: baseline;
+}
+.chapter-opener-bottom li:last-child { border-bottom: none; }
+.chapter-opener-bottom li::before {
+  content: counter(chapsec, decimal-leading-zero); counter-increment: chapsec;
+  font-family: 'Poppins', sans-serif; font-size: 9pt;
+  color: var(--accent); font-weight: 500;
+}
+.chapter-opener-bottom ul { counter-reset: chapsec; }
+
+/* ================ CONTENU INTÉRIEUR ================ */
+.content-page { padding-top: 25mm; padding-bottom: 18mm; }
+.content-page h2 {
+  font-size: 21pt; font-weight: 500; color: var(--primary);
+  margin-bottom: 5mm; letter-spacing: -0.3px;
+}
+.content-page h2 .h2-num {
+  font-family: 'Lora', serif; color: var(--accent);
+  font-weight: 400; margin-right: 4mm;
+}
+.content-page h3 {
+  font-family: 'Poppins', sans-serif; font-size: 10.5pt;
+  color: var(--primary); font-weight: 600; text-transform: uppercase;
+  letter-spacing: 1.5px; margin: 6mm 0 2.5mm 0;
+  padding-bottom: 1.5mm; border-bottom: 1px solid var(--accent);
+  display: inline-block;
+}
+.content-page p { margin-bottom: 3mm; font-size: 10.5pt; line-height: 1.55; }
+.dropcap::first-letter {
+  font-family: 'Lora', serif; font-size: 36pt;
+  float: left; line-height: 0.85;
+  margin: 2mm 3mm -1mm 0; color: var(--accent); font-weight: 500;
+}
+
+/* ================ ENCADRÉS ================ */
+.callout {
+  margin: 3mm 0; padding: 3.5mm 5mm 3.5mm 7mm;
+  border-left: 3px solid; background: var(--paper);
+  page-break-inside: avoid; position: relative;
+}
+.callout-label {
+  font-family: 'Poppins', sans-serif; font-size: 8pt;
+  letter-spacing: 2.5px; text-transform: uppercase;
+  font-weight: 600; margin-bottom: 2mm;
+  display: flex; align-items: center; gap: 3mm;
+}
+.callout-icon {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 6mm; height: 6mm; border-radius: 50%;
+  font-size: 9pt; font-weight: 600; font-family: 'Lora', serif;
+}
+.callout-body { font-size: 9.5pt; line-height: 1.5; color: var(--ink); }
+.callout-body p { margin-bottom: 2mm; text-align: left; }
+.callout-body p:last-child { margin-bottom: 0; }
+
+.callout.callout-tip { border-color: var(--accent); background: var(--accent-soft); }
+.callout.callout-tip .callout-label { color: var(--accent-deep); }
+.callout.callout-tip .callout-icon { background: var(--accent); color: var(--white); }
+
+.callout.callout-key { border-color: var(--success); background: var(--success-soft); }
+.callout.callout-key .callout-label { color: var(--success); }
+.callout.callout-key .callout-icon { background: var(--success); color: var(--white); }
+
+.callout.callout-warning { border-color: var(--danger); background: var(--danger-soft); }
+.callout.callout-warning .callout-label { color: var(--danger); }
+.callout.callout-warning .callout-icon { background: var(--danger); color: var(--white); }
+
+.callout.callout-case { border-color: var(--primary); background: var(--primary-light); }
+.callout.callout-case .callout-label { color: var(--primary); }
+.callout.callout-case .callout-icon { background: var(--primary); color: var(--white); }
+
+.callout.callout-data { border-color: var(--primary-soft); background: var(--paper); }
+.callout.callout-data .callout-label { color: var(--primary); }
+.callout.callout-data .callout-icon { background: var(--primary-soft); color: var(--white); }
+
+.callout.callout-quiz { border-color: var(--secondary); background: var(--secondary-soft); }
+.callout.callout-quiz .callout-label { color: var(--secondary); }
+.callout.callout-quiz .callout-icon { background: var(--secondary); color: var(--white); }
+
+/* Data grid */
+.data-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4mm; margin-top: 3mm; }
+.data-cell {
+  background: var(--white); padding: 4mm; border-radius: 3px;
+  border: 0.5px solid var(--line);
+}
+.data-cell-num {
+  font-family: 'Lora', serif; font-size: 22pt;
+  color: var(--primary); font-weight: 500; line-height: 1;
+}
+.data-cell-num .unit { font-size: 12pt; color: var(--accent-deep); margin-left: 1mm; }
+.data-cell-label {
+  font-family: 'Poppins', sans-serif; font-size: 8pt;
+  color: var(--muted); text-transform: uppercase;
+  letter-spacing: 0.8px; margin-top: 2mm;
+}
+
+/* Analogie */
+.analogy {
+  display: grid; grid-template-columns: 18mm 1fr; gap: 5mm;
+  align-items: start; margin: 4mm 0; padding: 3.5mm 5mm;
+  background: var(--paper); border-radius: 4px;
+}
+.analogy-marker {
+  font-family: 'Lora', serif; font-size: 10.5pt; font-style: italic;
+  color: var(--accent-deep); text-align: center; line-height: 1.2;
+  border-right: 1px solid var(--line); padding-right: 4mm; padding-top: 1mm;
+}
+.analogy-content { font-size: 10pt; line-height: 1.5; }
+
+/* Tableaux */
+table.clean {
+  width: 100%; border-collapse: collapse; margin: 3mm 0; font-size: 9.5pt;
+}
+table.clean thead th {
+  background: var(--primary); color: var(--white);
+  font-family: 'Poppins', sans-serif; font-size: 8pt;
+  font-weight: 500; text-transform: uppercase; letter-spacing: 0.8px;
+  padding: 2.5mm 3mm; text-align: left;
+}
+table.clean tbody td {
+  padding: 2.5mm 3mm; border-bottom: 0.5px solid var(--line-light); vertical-align: top;
+}
+table.clean tbody tr:nth-child(even) { background: var(--paper); }
+table.clean tbody td:first-child { font-weight: 600; color: var(--primary); }
+
+/* Glossaire & checklist & quiz (depuis Vol01) */
+.glossary-entry {
+  margin-bottom: 2mm; padding-bottom: 1.5mm;
+  border-bottom: 0.5px solid var(--line-light); page-break-inside: avoid;
+}
+.glossary-entry:last-child { border-bottom: none; }
+.glossary-term {
+  font-family: 'Lora', serif; font-weight: 600; font-size: 10pt;
+  color: var(--primary); margin-bottom: 0.5mm;
+}
+.glossary-def {
+  font-size: 9pt; line-height: 1.35; color: var(--ink-soft); text-align: left;
+}
+.glossary-letter {
+  font-family: 'Lora', serif; font-size: 18pt; font-weight: 500;
+  color: var(--accent); margin: 3mm 0 1.5mm 0;
+  padding-bottom: 1mm; border-bottom: 1px solid var(--accent);
+  letter-spacing: -1px;
+}
+
+.checklist-section { margin-bottom: 6mm; page-break-inside: avoid; }
+.checklist-section h3 {
+  font-family: 'Poppins', sans-serif; font-size: 10pt;
+  color: var(--primary); font-weight: 600; text-transform: uppercase;
+  letter-spacing: 1.5px; margin: 5mm 0 3mm 0;
+  padding-bottom: 2mm; border-bottom: 1.5px solid var(--accent); display: block;
+}
+.checklist-item {
+  display: grid; grid-template-columns: 7mm 1fr; gap: 3mm;
+  padding: 2.5mm 0; border-bottom: 0.5px solid var(--line-light); align-items: start;
+}
+.checklist-checkbox {
+  width: 5mm; height: 5mm; border: 1px solid var(--primary);
+  border-radius: 2px; background: var(--white); flex-shrink: 0; margin-top: 0.5mm;
+}
+.checklist-text { font-size: 10pt; line-height: 1.5; color: var(--ink); }
+
+.quiz-question {
+  margin-bottom: 6mm; padding: 4mm 5mm; background: var(--paper);
+  border-left: 3px solid var(--secondary); border-radius: 0 4px 4px 0;
+  page-break-inside: avoid;
+}
+.quiz-num {
+  font-family: 'Poppins', sans-serif; font-size: 8.5pt;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: var(--secondary); font-weight: 600; margin-bottom: 2mm;
+}
+.quiz-prompt {
+  font-family: 'Lora', serif; font-size: 11pt; font-weight: 500;
+  color: var(--primary); margin-bottom: 3mm; line-height: 1.4;
+}
+.quiz-choices { list-style: none; padding: 0; }
+.quiz-choices li {
+  font-size: 10pt; padding: 1.5mm 0 1.5mm 8mm; position: relative; line-height: 1.5;
+}
+.quiz-choices li::before {
+  content: attr(data-letter); position: absolute; left: 0;
+  font-family: 'Poppins', sans-serif; font-size: 9pt;
+  font-weight: 600; color: var(--accent-deep); width: 6mm;
+}
+
+/* Part divider */
+.part-divider {
+  background: var(--primary); color: var(--white);
+  display: flex; flex-direction: column; justify-content: center;
+  align-items: flex-start; padding: 0 22mm; position: relative; overflow: hidden;
+}
+.part-divider .page-header, .part-divider .page-footer { display: none; }
+.part-divider::before {
+  content: ''; position: absolute; inset: 0;
+  background-image: radial-gradient(circle at 80% 20%, var(--accent-glow-soft), transparent 50%);
+}
+.part-eyebrow {
+  position: relative; z-index: 1;
+  font-family: 'Poppins', sans-serif; font-size: 10pt;
+  letter-spacing: 5px; text-transform: uppercase;
+  color: var(--accent); font-weight: 500; margin-bottom: 8mm;
+}
+.part-num {
+  position: relative; z-index: 1;
+  font-family: 'Lora', serif; font-size: 130pt; line-height: 0.9;
+  color: var(--accent); font-weight: 400; letter-spacing: -4px; margin-bottom: 6mm;
+}
+.part-title {
+  position: relative; z-index: 1;
+  font-family: 'Lora', serif; font-size: 36pt; font-weight: 500;
+  color: var(--white); letter-spacing: -0.5px; line-height: 1.1;
+  margin-bottom: 8mm; max-width: 150mm;
+}
+.part-deck {
+  position: relative; z-index: 1;
+  font-family: 'Lora', serif; font-style: italic; font-size: 13pt;
+  color: rgba(255,255,255,0.78); line-height: 1.55; max-width: 145mm;
+}
+
+/* End page */
+.end-page { text-align: center; display: flex; flex-direction: column;
+  justify-content: center; align-items: center; }
+.end-ornament {
+  font-family: 'Lora', serif; font-size: 30pt;
+  color: var(--accent); margin-bottom: 8mm; letter-spacing: 8px;
+}
+.end-message {
+  font-family: 'Lora', serif; font-size: 16pt; font-style: italic;
+  color: var(--primary); max-width: 140mm; line-height: 1.4; margin-bottom: 10mm;
+}
+.end-signature {
+  font-family: 'Poppins', sans-serif; font-size: 10pt;
+  letter-spacing: 2px; text-transform: uppercase; color: var(--accent-deep);
+}
+
+/* Helpers */
+.divider-ornament {
+  text-align: center; margin: 8mm 0; color: var(--accent);
+  font-size: 14pt; letter-spacing: 8px;
+}
+.two-col { column-count: 2; column-gap: 8mm; column-rule: 0.5px solid var(--line-light); }
+.two-col p { text-align: left; }
+
+/* v2 — Séparateur entre sections bonus */
+.bonus-sep {
+  width: 100%; height: 1px;
+  background: var(--line); margin: 8mm 0;
+  border: none; column-span: all;
+}
+
+/* v2 — Glossaire en colonnes : les lettres s'étendent sur toute la largeur */
+.glossary-letter { column-span: all; }

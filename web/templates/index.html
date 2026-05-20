@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yeelen Agent · Générateur d'ebooks</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark"></span>
+    <div>
+      <div class="brand-name">YEELEN <span class="brand-mode">Agent</span></div>
+      <div class="brand-tagline">Générateur d'ebooks · Énergies & Agriculture</div>
+    </div>
+  </div>
+  <div class="status-pill {% if api_configured %}status-on{% else %}status-demo{% endif %}">
+    {% if api_configured %}
+      <span class="dot"></span> Mode Live · Clé API active
+    {% else %}
+      <span class="dot"></span> Mode Démo · Pas de clé API
+    {% endif %}
+  </div>
+</header>
+
+<!-- ===================== ONGLETS MODE ===================== -->
+<div class="mode-tabs-bar">
+  <div class="mode-tabs">
+    <button class="mode-tab active" onclick="switchMode('generate')" id="tab-generate">
+      ✨ Générer un nouvel ebook
+    </button>
+    <button class="mode-tab" onclick="switchMode('reformat')" id="tab-reformat">
+      📂 Reformater un ebook existant
+    </button>
+  </div>
+</div>
+
+<!-- ===================== ÉTAPE 1 : FORMULAIRE ===================== -->
+<main id="step-form" class="container">
+
+  <div class="hero">
+    <div class="eyebrow">Nouveau projet</div>
+    <h1>Créez votre prochain ebook<br>en quelques minutes.</h1>
+    <p class="lede">L'agent génère un plan structuré, le valide avec vous, puis rédige chaque chapitre dans la voix Yeelen — analogies, encadrés pédagogiques, ancrage Afrique, format pro prêt à vendre.</p>
+  </div>
+
+  <form id="ebook-form" class="form-card">
+    <div class="form-grid">
+
+      <div class="form-group full">
+        <label for="sujet">Sujet de l'ebook</label>
+        <input type="text" id="sujet" name="sujet" required
+               placeholder="ex. Irrigation solaire pour le maraîchage en Afrique">
+        <span class="hint">Soyez précis — l'agent calibre tout le contenu sur ce sujet.</span>
+      </div>
+
+      <div class="form-group">
+        <label for="audience">Audience cible</label>
+        <select id="audience" name="audience">
+          <option value="Grand public débutant">Grand public débutant</option>
+          <option value="Grand public motivé" selected>Grand public motivé</option>
+          <option value="Public technique non spécialiste">Public technique non spécialiste</option>
+          <option value="Étudiants ou apprenants">Étudiants ou apprenants</option>
+          <option value="Professionnels du secteur">Professionnels du secteur</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="pages">Pages visées</label>
+        <select id="pages" name="pages">
+          <option value="20">~20 pages (lecture express)</option>
+          <option value="30" selected>~30 pages (guide standard)</option>
+          <option value="50">~50 pages (guide complet)</option>
+          <option value="80">~80 pages (manuel approfondi)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="charte">Charte graphique</label>
+        <select id="charte" name="charte">
+          <option value="solaire" selected>Solaire — Navy + Amber chaleureux</option>
+          <option value="agriculture">Agriculture — Vert + Ocre terre</option>
+          <option value="premium">Premium — Marine + Cuivre</option>
+          <option value="pedago">Pédago — Terracotta + Crème</option>
+        </select>
+        <div class="charter-preview" id="charter-preview">
+          <div class="cp-swatch primary"></div>
+          <div class="cp-swatch accent"></div>
+          <div class="cp-swatch paper"></div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="ton">Ton</label>
+        <select id="ton" name="ton">
+          <option value="Vulgarisé, chaleureux, ancrage Afrique" selected>Vulgarisé chaleureux (Afrique)</option>
+          <option value="Pédagogique formel">Pédagogique formel</option>
+          <option value="Direct et orienté action">Direct, orienté action</option>
+          <option value="Inspirant et engagé">Inspirant et engagé</option>
+        </select>
+      </div>
+
+      <div class="form-group full">
+        <label for="notes">Notes complémentaires <span class="optional">(optionnel)</span></label>
+        <textarea id="notes" name="notes" rows="3"
+                  placeholder="Précisions sur l'angle, public spécifique, données à intégrer, sources, axes à éviter..."></textarea>
+      </div>
+
+      <details class="form-group full advanced">
+        <summary>Paramètres avancés (auteur, volume, édition)</summary>
+        <div class="form-grid inner">
+          <div class="form-group">
+            <label for="auteur">Auteur</label>
+            <input type="text" id="auteur" name="auteur" value="Abdoulaye Gackou">
+          </div>
+          <div class="form-group">
+            <label for="auteur_role">Rôle / titre</label>
+            <input type="text" id="auteur_role" name="auteur_role" value="Ingénieur en énergie solaire photovoltaïque">
+          </div>
+          <div class="form-group">
+            <label for="auteur_initiales">Initiales (avatar)</label>
+            <input type="text" id="auteur_initiales" name="auteur_initiales" value="AG" maxlength="2">
+          </div>
+          <div class="form-group">
+            <label for="volume_label">Label volume</label>
+            <input type="text" id="volume_label" name="volume_label" value="Volume 01">
+          </div>
+          <div class="form-group">
+            <label for="edition">Édition</label>
+            <input type="text" id="edition" name="edition" value="Édition 2026">
+          </div>
+        </div>
+      </details>
+
+    </div>
+
+    <div class="form-footer">
+      <div class="cost-estimate">
+        Coût API estimé : <strong id="cost-est">~ 0,60 €</strong> par ebook
+        <span class="info-pill">Opus pour le plan + Sonnet pour les chapitres</span>
+      </div>
+      <button type="submit" class="btn-primary" id="btn-submit">
+        Générer le plan →
+      </button>
+    </div>
+  </form>
+
+</main>
+
+<!-- ===================== ÉTAPE 2 : ATTENTE PLAN ===================== -->
+<main id="step-loading-plan" class="container hidden">
+  <div class="loader-card">
+    <div class="loader-spinner"></div>
+    <h2 id="loading-title">Génération du plan...</h2>
+    <p id="loading-message">L'agent réfléchit à la structure idéale de votre ebook.</p>
+    <div class="loader-substeps">
+      <div class="substep done">✓ Analyse du sujet</div>
+      <div class="substep active">○ Conception du plan</div>
+      <div class="substep">○ Calibrage des chapitres</div>
+    </div>
+  </div>
+</main>
+
+<!-- ===================== ÉTAPE 3 : VALIDATION DU PLAN ===================== -->
+<main id="step-plan-review" class="container hidden">
+  <div class="hero">
+    <div class="eyebrow">Étape 2 / 3</div>
+    <h1>Le plan est prêt.<br>Validez-le pour lancer la rédaction.</h1>
+    <p class="lede">Vous pouvez modifier les titres, sous-titres et descriptions ci-dessous. Une fois validé, l'agent rédigera tous les chapitres dans la voix Yeelen.</p>
+  </div>
+
+  <div class="plan-summary" id="plan-summary"></div>
+
+  <div class="plan-actions">
+    <button class="btn-secondary" id="btn-restart">← Recommencer</button>
+    <button class="btn-primary" id="btn-validate-plan">Valider et lancer la rédaction →</button>
+  </div>
+</main>
+
+<!-- ===================== ÉTAPE 4 : RÉDACTION ===================== -->
+<main id="step-writing" class="container hidden">
+  <div class="loader-card">
+    <div class="loader-spinner"></div>
+    <h2 id="writing-title">Rédaction en cours...</h2>
+    <p id="writing-message">L'agent écrit les chapitres dans la voix Yeelen.</p>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+    <div class="progress-stats">
+      <span id="progress-text">0 / 0 chapitres</span>
+      <span id="progress-cost">0,00 € dépensés</span>
+    </div>
+  </div>
+</main>
+
+<!-- ===================== ÉTAPE 5 : RÉSULTAT ===================== -->
+<main id="step-done" class="container hidden">
+  <div class="success-card">
+    <div class="success-icon">✓</div>
+    <h1>Votre ebook est prêt !</h1>
+    <p class="lede" id="done-stats"></p>
+
+    <div class="downloads">
+      <a class="download-btn" id="dl-pdf" target="_blank">
+        <div class="dl-icon">PDF</div>
+        <div class="dl-info">
+          <div class="dl-title">Version PDF</div>
+          <div class="dl-desc">Prête à vendre, design pro</div>
+        </div>
+        <div class="dl-arrow">↓</div>
+      </a>
+      <a class="download-btn" id="dl-docx" target="_blank">
+        <div class="dl-icon">DOCX</div>
+        <div class="dl-info">
+          <div class="dl-title">Version Word</div>
+          <div class="dl-desc">Éditable, modifiable</div>
+        </div>
+        <div class="dl-arrow">↓</div>
+      </a>
+      <a class="download-btn" id="dl-epub" target="_blank">
+        <div class="dl-icon">EPUB</div>
+        <div class="dl-info">
+          <div class="dl-title">Version EPUB</div>
+          <div class="dl-desc">Liseuses, Kindle, Kobo</div>
+        </div>
+        <div class="dl-arrow">↓</div>
+      </a>
+    </div>
+
+    <div class="cost-summary" id="cost-summary"></div>
+
+    <button class="btn-secondary" onclick="location.reload()">Créer un nouvel ebook</button>
+  </div>
+</main>
+
+<!-- ===================== ÉTAPE ERREUR ===================== -->
+<main id="step-error" class="container hidden">
+  <div class="error-card">
+    <div class="error-icon">⚠</div>
+    <h2>Une erreur s'est produite</h2>
+    <pre id="error-message"></pre>
+    <button class="btn-secondary" onclick="location.reload()">Recommencer</button>
+  </div>
+</main>
+
+<!-- ===================== MODE REFORMATAGE ===================== -->
+<main id="mode-reformat" class="container hidden">
+
+  <!-- Étape R1 : Upload du fichier -->
+  <div id="reformat-upload">
+    <div class="hero">
+      <div class="eyebrow">Reformater un ebook</div>
+      <h1>Donnez votre ebook,<br>recevez la mise en forme Yeelen.</h1>
+      <p class="lede">Uploadez votre ebook (PDF, EPUB, DOCX ou TXT). L'agent extrait le contenu, Claude restructure chaque chapitre dans le style éditorial Yeelen — analogies, encadrés pédagogiques, mise en page pro — et vous téléchargez le PDF reformaté.</p>
+    </div>
+
+    <!-- Bannière avertissement mode démo -->
+    <div id="demo-warning-banner" class="hidden" style="
+      background:#fff3cd; border:1px solid #ffc107; border-radius:8px;
+      padding:12px 16px; margin-bottom:20px; display:flex; gap:10px; align-items:flex-start;">
+      <span style="font-size:20px;">⚠️</span>
+      <div>
+        <strong>Mode démo actif — Clé API manquante</strong><br>
+        <span style="font-size:13px;">Sans clé API Anthropic, l'agent ne peut pas lire votre ebook. Le plan généré sera générique et ne reflétera pas votre contenu.<br>
+        <strong>Pour que l'agent analyse vraiment votre fichier :</strong> ajoutez votre clé <code>ANTHROPIC_API_KEY</code> dans le fichier <code>.env</code> et relancez <code>python web/app.py</code>.</span>
+      </div>
+    </div>
+
+    <div class="form-card">
+      <!-- Zone de dépôt du fichier -->
+      <div class="upload-zone" id="upload-zone">
+        <input type="file" id="upload-input" accept=".pdf,.epub,.docx,.txt,.md" style="display:none">
+        <div class="upload-icon">📄</div>
+        <div class="upload-label">Glissez votre ebook ici</div>
+        <div class="upload-hint">ou cliquez pour sélectionner · PDF, EPUB, DOCX, TXT (max 50 Mo)</div>
+        <button class="btn-upload" onclick="document.getElementById('upload-input').click()">Choisir un fichier</button>
+      </div>
+
+      <div id="upload-preview" class="hidden" style="margin-top:16px;">
+        <div class="upload-file-info">
+          <span class="upload-file-icon">📄</span>
+          <div>
+            <div class="upload-file-name" id="upload-file-name"></div>
+            <div class="upload-file-meta" id="upload-file-meta"></div>
+          </div>
+          <button class="btn-remove" onclick="resetUpload()">✕</button>
+        </div>
+        <div class="upload-text-preview" id="upload-text-preview"></div>
+      </div>
+
+      <!-- Paramètres de mise en forme -->
+      <div id="reformat-params" class="hidden" style="margin-top:24px;">
+        <h3 style="margin-bottom:16px;color:var(--primary);font-family:'Lora',serif;">Paramètres de mise en forme</h3>
+        <div class="form-grid">
+
+          <div class="form-group">
+            <label for="rf-charte">Charte graphique</label>
+            <select id="rf-charte" name="charte">
+              <option value="solaire" selected>Solaire — Navy + Amber chaleureux</option>
+              <option value="agriculture">Agriculture — Vert + Ocre terre</option>
+              <option value="premium">Premium — Marine + Cuivre</option>
+              <option value="pedago">Pédago — Terracotta + Crème</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="rf-audience">Audience cible</label>
+            <select id="rf-audience">
+              <option value="Grand public débutant">Grand public débutant</option>
+              <option value="Grand public motivé" selected>Grand public motivé</option>
+              <option value="Public technique non spécialiste">Public technique</option>
+              <option value="Étudiants ou apprenants">Étudiants</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="rf-auteur">Nom de l'auteur</label>
+            <input type="text" id="rf-auteur" value="Abdoulaye Gackou">
+          </div>
+
+          <div class="form-group">
+            <label for="rf-role">Rôle / titre</label>
+            <input type="text" id="rf-role" value="Ingénieur en énergie solaire photovoltaïque">
+          </div>
+
+          <div class="form-group">
+            <label for="rf-ton">Ton éditorial</label>
+            <input type="text" id="rf-ton" value="Vulgarisé, chaleureux, ancrage Afrique">
+          </div>
+
+          <div class="form-group">
+            <label for="rf-volume">Label volume</label>
+            <input type="text" id="rf-volume" value="Volume 01">
+          </div>
+
+        </div>
+
+        <div class="form-actions">
+          <button class="btn-primary" id="btn-reformat-start" onclick="startReformat()">
+            Analyser et reformater
+          </button>
+          <span class="hint">L'agent va analyser la structure de l'ebook, générer un plan, puis reformater chaque chapitre.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Étape R2 : Validation du plan reformaté -->
+  <div id="reformat-plan-validation" class="hidden">
+    <div class="section-header">
+      <div class="eyebrow">Étape 2 · Structure détectée</div>
+      <h2>Voici la structure extraite de votre ebook.</h2>
+      <p>Vérifiez que les chapitres et sections ont bien été détectés. Vous pouvez valider et lancer le reformatage.</p>
+    </div>
+    <div id="reformat-plan-display" class="plan-display"></div>
+    <div class="plan-actions">
+      <button class="btn-primary" onclick="continueReformat()">✓ Valider et reformater</button>
+      <button class="btn-secondary" onclick="resetUpload()">Recommencer</button>
+    </div>
+  </div>
+
+  <!-- Étape R3 : Progression -->
+  <div id="reformat-progress" class="hidden">
+    <div class="progress-card">
+      <div class="progress-icon spinning">⟳</div>
+      <h2>Reformatage en cours…</h2>
+      <p id="reformat-progress-msg">Initialisation...</p>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar" id="reformat-progress-bar" style="width:0%"></div>
+      </div>
+      <div class="progress-steps" id="reformat-progress-steps"></div>
+    </div>
+  </div>
+
+  <!-- Étape R4 : Téléchargement -->
+  <div id="reformat-done" class="hidden">
+    <div class="done-card">
+      <div class="done-icon">✓</div>
+      <h2>Ebook reformaté avec succès !</h2>
+      <p>Votre ebook a été restructuré dans le style Collection Yeelen.</p>
+      <div class="download-grid">
+        <a class="download-btn" id="rf-dl-pdf" target="_blank">
+          <div class="dl-icon">PDF</div>
+          <div class="dl-info"><div class="dl-title">Version PDF</div><div class="dl-desc">Mise en page pro, prêt à vendre</div></div>
+          <div class="dl-arrow">↓</div>
+        </a>
+        <a class="download-btn" id="rf-dl-docx" target="_blank">
+          <div class="dl-icon">DOCX</div>
+          <div class="dl-info"><div class="dl-title">Version Word</div><div class="dl-desc">Éditable, modifiable</div></div>
+          <div class="dl-arrow">↓</div>
+        </a>
+        <a class="download-btn" id="rf-dl-epub" target="_blank">
+          <div class="dl-icon">EPUB</div>
+          <div class="dl-info"><div class="dl-title">Version EPUB</div><div class="dl-desc">Liseuses, Kindle, Kobo</div></div>
+          <div class="dl-arrow">↓</div>
+        </a>
+      </div>
+      <div class="cost-summary" id="rf-cost-summary"></div>
+      <button class="btn-secondary" onclick="location.reload()">Reformater un autre ebook</button>
+    </div>
+  </div>
+
+</main>
+
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+<script>
+// ============================================================
+//   LOGIQUE MODE REFORMATAGE
+// ============================================================
+
+let reformatJobId = null;
+
+function switchMode(mode) {
+  document.getElementById('tab-generate').classList.toggle('active', mode === 'generate');
+  document.getElementById('tab-reformat').classList.toggle('active', mode === 'reformat');
+  // Afficher/cacher les sections
+  const generateSections = ['step-form','step-plan','step-writing','step-done','step-error'];
+  generateSections.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle('hidden', mode !== 'generate');
+  });
+  document.getElementById('mode-reformat').classList.toggle('hidden', mode !== 'reformat');
+}
+
+// Drag & drop
+const uploadZone = document.getElementById('upload-zone');
+uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('drag-over'); });
+uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('drag-over'));
+uploadZone.addEventListener('drop', e => {
+  e.preventDefault();
+  uploadZone.classList.remove('drag-over');
+  const file = e.dataTransfer.files[0];
+  if (file) handleFileSelected(file);
+});
+document.getElementById('upload-input').addEventListener('change', e => {
+  if (e.target.files[0]) handleFileSelected(e.target.files[0]);
+});
+
+function handleFileSelected(file) {
+  document.getElementById('upload-file-name').textContent = file.name;
+  document.getElementById('upload-file-meta').textContent =
+    `${(file.size / 1024).toFixed(0)} Ko · ${file.type || 'fichier texte'}`;
+  document.getElementById('upload-preview').classList.remove('hidden');
+  document.getElementById('reformat-params').classList.remove('hidden');
+  uploadZone.style.display = 'none';
+  // Upload immédiat pour extraction
+  uploadFile(file);
+}
+
+async function uploadFile(file) {
+  const btn = document.getElementById('btn-reformat-start');
+  btn.disabled = true;
+  btn.textContent = 'Extraction du texte...';
+  document.getElementById('upload-text-preview').textContent = 'Extraction en cours...';
+
+  const form = new FormData();
+  form.append('file', file);
+
+  try {
+    const res = await fetch('/api/upload-extract', { method: 'POST', body: form });
+    const data = await res.json();
+    if (data.error) {
+      alert('Erreur : ' + data.error);
+      resetUpload();
+      return;
+    }
+    reformatJobId = data.job_id;
+    document.getElementById('upload-text-preview').textContent =
+      `✓ ${data.word_count.toLocaleString()} mots extraits\n\nAperçu : ${data.preview}...`;
+    btn.disabled = false;
+    btn.textContent = 'Analyser et reformater';
+  } catch(e) {
+    alert('Erreur réseau : ' + e.message);
+    resetUpload();
+  }
+}
+
+function resetUpload() {
+  reformatJobId = null;
+  document.getElementById('upload-zone').style.display = '';
+  document.getElementById('upload-preview').classList.add('hidden');
+  document.getElementById('reformat-params').classList.add('hidden');
+  document.getElementById('reformat-plan-validation').classList.add('hidden');
+  document.getElementById('reformat-upload').classList.remove('hidden');
+  document.getElementById('upload-input').value = '';
+}
+
+async function startReformat() {
+  if (!reformatJobId) { alert('Uploadez d\'abord un fichier.'); return; }
+  const btn = document.getElementById('btn-reformat-start');
+  btn.disabled = true;
+  btn.textContent = 'Analyse en cours (Opus)...';
+
+  const payload = {
+    charte: document.getElementById('rf-charte').value,
+    audience: document.getElementById('rf-audience').value,
+    auteur: document.getElementById('rf-auteur').value,
+    auteur_role: document.getElementById('rf-role').value,
+    ton: document.getElementById('rf-ton').value,
+    volume_label: document.getElementById('rf-volume').value,
+    auteur_initiales: (document.getElementById('rf-auteur').value || 'AG').slice(0,2).toUpperCase(),
+    edition: 'Édition 2026',
+  };
+
+  const res = await fetch(`/api/reformat-start/${reformatJobId}`, {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify(payload)
+  });
+  const data = await res.json();
+
+  // Avertissement mode démo
+  if (data.demo_mode && !data.has_api_key) {
+    const banner = document.getElementById('demo-warning-banner');
+    if (banner) banner.classList.remove('hidden');
+  }
+
+  // Polling jusqu'à ce que le plan soit prêt
+  pollReformatPlan();
+}
+
+async function pollReformatPlan() {
+  const btn = document.getElementById('btn-reformat-start');
+  while (true) {
+    await new Promise(r => setTimeout(r, 2000));
+    const res = await fetch(`/api/status/${reformatJobId}`);
+    const data = await res.json();
+    if (data.error) { alert(data.error); btn.disabled=false; btn.textContent='Analyser et reformater'; return; }
+    if (data.step === 'error') { alert('Erreur : ' + data.error); btn.disabled=false; return; }
+    if (data.plan) {
+      displayReformatPlan(data.plan);
+      return;
+    }
+  }
+}
+
+function displayReformatPlan(plan) {
+  document.getElementById('reformat-upload').classList.add('hidden');
+  const container = document.getElementById('reformat-plan-display');
+  let html = `<div class="plan-title-block"><div class="plan-main-title">${plan.titre || ''}</div><div class="plan-subtitle">${plan.sous_titre || ''}</div></div>`;
+
+  (plan.parties || []).forEach(partie => {
+    html += `<div class="plan-partie"><div class="plan-partie-label">${partie.titre || ''}</div>`;
+    (partie.chapitres || []).forEach(chap => {
+      html += `<div class="plan-chap"><div class="plan-chap-num">${String(chap.numero).padStart(2,'0')}</div><div class="plan-chap-body"><div class="plan-chap-title">${chap.titre || ''}</div>`;
+      if (chap.sections && chap.sections.length) {
+        html += '<div class="plan-sections">' + chap.sections.map(s => `<span class="plan-sec">${s.titre}</span>`).join('') + '</div>';
+      }
+      html += '</div></div>';
+    });
+    html += '</div>';
+  });
+
+  container.innerHTML = html;
+  document.getElementById('reformat-plan-validation').classList.remove('hidden');
+}
+
+async function continueReformat() {
+  document.getElementById('reformat-plan-validation').classList.add('hidden');
+  document.getElementById('reformat-progress').classList.remove('hidden');
+
+  await fetch(`/api/reformat-continue/${reformatJobId}`, {
+    method: 'POST', headers: {'Content-Type':'application/json'}, body: '{}'
+  });
+
+  pollReformatProgress();
+}
+
+async function pollReformatProgress() {
+  while (true) {
+    await new Promise(r => setTimeout(r, 2500));
+    const res = await fetch(`/api/status/${reformatJobId}`);
+    const data = await res.json();
+
+    document.getElementById('reformat-progress-msg').textContent = data.message || '';
+
+    if (data.chapter_total > 0) {
+      const pct = Math.round((data.chapter_progress / data.chapter_total) * 80) + 10;
+      document.getElementById('reformat-progress-bar').style.width = pct + '%';
+      document.getElementById('reformat-progress-steps').textContent =
+        `Chapitre ${data.chapter_progress} / ${data.chapter_total}`;
+    }
+
+    if (data.step === 'error') {
+      document.getElementById('reformat-progress').classList.add('hidden');
+      alert('Erreur : ' + (data.error || 'Inconnue'));
+      return;
+    }
+
+    if (data.step === 'done' && data.files && data.files.pdf) {
+      document.getElementById('reformat-progress-bar').style.width = '100%';
+      await new Promise(r => setTimeout(r, 600));
+      showReformatDone(data);
+      return;
+    }
+  }
+}
+
+function showReformatDone(data) {
+  document.getElementById('reformat-progress').classList.add('hidden');
+  document.getElementById('reformat-done').classList.remove('hidden');
+  document.getElementById('rf-dl-pdf').href = `/api/download/${reformatJobId}/pdf`;
+  document.getElementById('rf-dl-docx').href = `/api/download/${reformatJobId}/docx`;
+  document.getElementById('rf-dl-epub').href = `/api/download/${reformatJobId}/epub`;
+  if (data.cost_usd_estimate > 0) {
+    document.getElementById('rf-cost-summary').textContent =
+      `Coût API estimé : $${data.cost_usd_estimate.toFixed(3)}`;
+  }
+}
+</script>
+</body>
+</html>

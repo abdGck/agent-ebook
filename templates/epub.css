@@ -1,0 +1,38 @@
+/* CSS pour EPUB - Compatibilité maximale readers */
+body {
+  font-family: Georgia, "Times New Roman", serif;
+  line-height: 1.65;
+  color: #1A1A1A;
+  margin: 0;
+  padding: 1em;
+}
+h1 {
+  font-size: 1.8em;
+  color: #0A2540;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+  font-weight: 600;
+  page-break-before: always;
+  border-bottom: 2px solid #E8A33D;
+  padding-bottom: 0.3em;
+}
+h2 { font-size: 1.4em; color: #0A2540; margin-top: 1.5em; margin-bottom: 0.5em; font-weight: 600; }
+h3 { font-size: 1.1em; color: #1B3A5C; margin-top: 1.2em; margin-bottom: 0.4em; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+p { margin: 0.6em 0; text-align: justify; }
+strong { color: #0A2540; font-weight: 600; }
+em { color: #4A4A4A; font-style: italic; }
+blockquote {
+  margin: 1em 0;
+  padding: 0.8em 1.2em;
+  background: #FBF1DC;
+  border-left: 3px solid #E8A33D;
+  font-style: italic;
+}
+blockquote p { margin: 0.4em 0; text-align: left; }
+table { width: 100%; border-collapse: collapse; margin: 1em 0; font-size: 0.95em; }
+table thead th { background: #0A2540; color: #FFFFFF; padding: 0.5em; text-align: left; }
+table tbody td { padding: 0.5em; border-bottom: 1px solid #ECEAE3; }
+table tbody tr:nth-child(even) { background: #FAFAF7; }
+ul, ol { margin: 0.6em 0; padding-left: 1.5em; }
+li { margin: 0.3em 0; }
+hr { border: none; border-top: 1px solid #D8D6D0; margin: 2em 0; }

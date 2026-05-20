@@ -1,0 +1,40 @@
+/* =============================================================
+   CHARTE · SOLAIRE
+   Navy profond + amber chaleureux — pour énergies renouvelables
+   ============================================================= */
+
+:root {
+  /* Couleurs principales */
+  --primary:        #0A2540;
+  --primary-soft:   #1B3A5C;
+  --primary-light:  #E8EEF5;
+  --primary-light-2: #C8D5E5;
+
+  /* Accent */
+  --accent:         #E8A33D;
+  --accent-soft:    #FBF1DC;
+  --accent-deep:    #B8761A;
+
+  /* Glow effects */
+  --accent-glow:       rgba(232, 163, 61, 0.15);
+  --accent-soft-glow:  rgba(232, 163, 61, 0.08);
+  --accent-glow-soft:  rgba(232, 163, 61, 0.10);
+  --accent-ring:       rgba(232, 163, 61, 0.25);
+
+  /* Sémantique */
+  --success:        #2D6A4F;
+  --success-soft:   #E4F1EA;
+  --danger:         #C2410C;
+  --danger-soft:    #FBEAE0;
+  --secondary:      #5B4B8A;
+  --secondary-soft: #ECE8F5;
+
+  /* Neutres */
+  --paper:    #FAFAF7;
+  --white:    #FFFFFF;
+  --ink:      #1A1A1A;
+  --ink-soft: #4A4A4A;
+  --muted:    #767676;
+  --line:       #D8D6D0;
+  --line-light: #ECEAE3;
+}

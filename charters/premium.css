@@ -1,0 +1,35 @@
+/* =============================================================
+   CHARTE · PREMIUM
+   Bleu marine profond + cuivre/or — pour public technique exigeant
+   ============================================================= */
+
+:root {
+  --primary:         #0F1B2C;
+  --primary-soft:    #1F3050;
+  --primary-light:   #E8ECF4;
+  --primary-light-2: #B8C5DD;
+
+  --accent:         #B87333;
+  --accent-soft:    #F5E8D8;
+  --accent-deep:    #7A4A1F;
+
+  --accent-glow:       rgba(184, 115, 51, 0.18);
+  --accent-soft-glow:  rgba(184, 115, 51, 0.08);
+  --accent-glow-soft:  rgba(184, 115, 51, 0.12);
+  --accent-ring:       rgba(184, 115, 51, 0.30);
+
+  --success:        #2D6A4F;
+  --success-soft:   #E4F1EA;
+  --danger:         #9F1F0E;
+  --danger-soft:    #F8E0DC;
+  --secondary:      #4A3D6C;
+  --secondary-soft: #E8E4F0;
+
+  --paper:    #F8F8F4;
+  --white:    #FFFFFF;
+  --ink:      #161616;
+  --ink-soft: #424242;
+  --muted:    #6E6E6E;
+  --line:       #D0CEC8;
+  --line-light: #E8E6E0;
+}

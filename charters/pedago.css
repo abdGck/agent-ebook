@@ -1,0 +1,36 @@
+/* =============================================================
+   CHARTE · PÉDAGO
+   Terracotta + crème — pour grand public et débutants absolus
+   Ton chaleureux, accessible, lisible
+   ============================================================= */
+
+:root {
+  --primary:         #6B3729;
+  --primary-soft:    #8B4F3D;
+  --primary-light:   #F5E8E0;
+  --primary-light-2: #E5C5B5;
+
+  --accent:         #F4A261;
+  --accent-soft:    #FCE9D2;
+  --accent-deep:    #C66E1F;
+
+  --accent-glow:       rgba(244, 162, 97, 0.18);
+  --accent-soft-glow:  rgba(244, 162, 97, 0.08);
+  --accent-glow-soft:  rgba(244, 162, 97, 0.12);
+  --accent-ring:       rgba(244, 162, 97, 0.30);
+
+  --success:        #2A9D8F;
+  --success-soft:   #DEF1EE;
+  --danger:         #E63946;
+  --danger-soft:    #FCE0E3;
+  --secondary:      #264653;
+  --secondary-soft: #DFE6E8;
+
+  --paper:    #FBF8F2;
+  --white:    #FFFFFF;
+  --ink:      #2B2018;
+  --ink-soft: #5C4C42;
+  --muted:    #8C7A6E;
+  --line:       #D8CFC4;
+  --line-light: #ECE5DB;
+}

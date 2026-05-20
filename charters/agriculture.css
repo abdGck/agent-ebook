@@ -1,0 +1,35 @@
+/* =============================================================
+   CHARTE · AGRICULTURE
+   Vert profond + ocre/terre — pour cultures, élevage, irrigation
+   ============================================================= */
+
+:root {
+  --primary:         #1F3D2C;
+  --primary-soft:    #2F5742;
+  --primary-light:   #E8F0E8;
+  --primary-light-2: #C5D7C5;
+
+  --accent:         #D97A2C;
+  --accent-soft:    #FAEAD8;
+  --accent-deep:    #9C5418;
+
+  --accent-glow:       rgba(217, 122, 44, 0.15);
+  --accent-soft-glow:  rgba(217, 122, 44, 0.08);
+  --accent-glow-soft:  rgba(217, 122, 44, 0.10);
+  --accent-ring:       rgba(217, 122, 44, 0.25);
+
+  --success:        #2D6A4F;
+  --success-soft:   #E4F1EA;
+  --danger:         #B53B0F;
+  --danger-soft:    #FBE8E0;
+  --secondary:      #6B5C2C;
+  --secondary-soft: #F0EBD8;
+
+  --paper:    #FAF9F4;
+  --white:    #FFFFFF;
+  --ink:      #1A1A1A;
+  --ink-soft: #4A4A4A;
+  --muted:    #767676;
+  --line:       #D6D4CC;
+  --line-light: #ECEAE0;
+}
