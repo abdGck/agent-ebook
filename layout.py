@@ -640,23 +640,50 @@ def render_pdf(html_path: Path, pdf_path: Path):
     try:
         from playwright.sync_api import sync_playwright
     except ImportError:
-        raise RuntimeError("Playwright non installé : pip install playwright && playwright install chromium")
+        raise RuntimeError("Playwright non installé : pip install playwright")
 
-    with sync_playwright() as p:
-        import os
-        chrome_paths = [
-            os.path.expanduser("~/.cache/puppeteer/chrome/linux-131.0.6778.204/chrome-linux64/chrome"),
-            "/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell",
-            "/usr/bin/chromium", "/usr/bin/google-chrome",
-        ]
-        chrome_path = next((cp for cp in chrome_paths if os.path.exists(cp)), None)
-        browser = p.chromium.launch(executable_path=chrome_path, headless=True) if chrome_path else p.chromium.launch(headless=True)
+    import os, glob, subprocess as sp
+
+    # Chercher Chromium dans tous les endroits possibles
+    patterns = [
+        "/usr/bin/chromium",
+        "/usr/bin/chromium-browser",
+        os.path.expanduser("~/.cache/ms-playwright/chromium-*/chrome-linux/chrome"),
+        os.path.expanduser("~/.cache/ms-playwright/chromium_headless_shell-*/chrome-headless-shell-linux64/chrome-headless-shell"),
+        r"C:\Program Files\Google\Chrome\Application\chrome.exe",
+    ]
+    chrome_path = None
+    for p in patterns:
+        if "*" in p:
+            found = glob.glob(p)
+            if found:
+                chrome_path = found[0]
+                break
+        elif os.path.exists(p):
+            chrome_path = p
+            break
+
+    # Si toujours pas trouvé, installer via playwright
+    if not chrome_path:
+        sp.run(["playwright", "install", "chromium", "--with-deps"],
+               capture_output=True, timeout=180)
+        for p in patterns:
+            if "*" in p:
+                found = glob.glob(p)
+                if found:
+                    chrome_path = found[0]
+                    break
+
+    with sync_playwright() as pw:
+        opts = {"headless": True, "args": ["--no-sandbox", "--disable-dev-shm-usage"]}
+        if chrome_path and os.path.exists(chrome_path):
+            opts["executable_path"] = chrome_path
+        browser = pw.chromium.launch(**opts)
         page = browser.new_page()
-        page.goto(f"file://{html_path.resolve()}")
-        page.wait_for_load_state("networkidle")
+        page.goto(f"file://{html_path.resolve()}", wait_until="networkidle")
         page.emulate_media(media="print")
         page.pdf(path=str(pdf_path), format="A4", print_background=True,
-                 margin={"top": "0", "bottom": "0", "left": "0", "right": "0"},
+                 margin={"top":"0","bottom":"0","left":"0","right":"0"},
                  prefer_css_page_size=True)
         browser.close()
 
