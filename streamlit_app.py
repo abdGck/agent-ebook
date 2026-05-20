@@ -121,66 +121,114 @@ def show_downloads(files, cost, prefix):
         st.caption(f"💰 Coût API estimé : ${cost:.3f}")
 
 def run_reformatage(ref, plan):
-    """Reformate tous les chapitres et exporte. Retourne (files, cost)."""
+    """Reformate les chapitres un par un en sauvegardant chaque résultat."""
     all_chaps = [(p,c) for p in plan.get("parties",[]) for c in p.get("chapitres",[])]
     total = len(all_chaps)
-    chapters_md, summaries = [], []
     system = PromptLibrary.load("system")
-    bar   = st.progress(0)
-    info  = st.empty()
 
-    for i,(partie,chap) in enumerate(all_chaps):
-        n = i+1
+    # Initialiser le buffer de chapitres si pas encore fait
+    if "r_chapters_done" not in st.session_state:
+        st.session_state.r_chapters_done = []
+    if "r_summaries" not in st.session_state:
+        st.session_state.r_summaries = []
+
+    already_done = len(st.session_state.r_chapters_done)
+    bar  = st.progress(int(already_done / total * 72))
+    info = st.empty()
+
+    # Reprendre depuis le dernier chapitre sauvegardé
+    for i, (partie, chap) in enumerate(all_chaps):
+        if i < already_done:
+            continue  # déjà traité, on saute
+
+        n = i + 1
         info.info(f"✍️ Chapitre {n}/{total} : **{chap['titre']}**")
         bar.progress(int((n-1)/total*72))
+
         chapitre_text = ref._extract_chapter_text(chap, i, total)
+        resumes = "\n".join(st.session_state.r_summaries) or "(premier chapitre)"
+
         user = PromptLibrary.render("reformat_chapter",
             titre_ebook=plan.get("titre",""),
             audience=ref.spec.audience, ton=ref.spec.ton,
             chapitre_json=json.dumps(chap, ensure_ascii=False, indent=2),
             texte_chapitre=chapitre_text,
-            resumes_chapitres_precedents="\n".join(summaries) or "(premier chapitre)",
+            resumes_chapitres_precedents=resumes,
             numero_chapitre=chap.get("numero", n))
-        md = ref.client.call("claude-sonnet-4-6", system, user, 16000)
-        chapters_md.append(md)
-        summaries.append(f"Ch {chap.get('numero',n)} : {chap['titre']}")
 
-    ref.progress.chapters_md = chapters_md
-    info.info("📎 Génération des bonus..."); bar.progress(82)
+        md = ref.client.call("claude-sonnet-4-6", system, user, 16000)
+
+        # Sauvegarder immédiatement dans session_state
+        st.session_state.r_chapters_done.append(md)
+        st.session_state.r_summaries.append(f"Ch {chap.get('numero',n)} : {chap['titre']}")
+
+    # Tous les chapitres sont faits
+    ref.progress.chapters_md = st.session_state.r_chapters_done
+
+    info.info("📎 Génération des bonus...")
+    bar.progress(82)
     ref.generate_bonus()
-    info.info("🖨️ Export PDF / DOCX / EPUB..."); bar.progress(93)
+
+    info.info("🖨️ Export PDF / DOCX / EPUB...")
+    bar.progress(93)
     files = ref.render_outputs()
-    bar.progress(100); info.empty()
+
+    bar.progress(100)
+    info.empty()
+
+    # Nettoyer le buffer temporaire
+    del st.session_state.r_chapters_done
+    del st.session_state.r_summaries
+
     return files, ref.client.total_cost_usd
 
 def run_generation(gen, plan):
-    """Rédige tous les chapitres et exporte. Retourne (files, cost)."""
+    """Rédige les chapitres un par un en sauvegardant chaque résultat."""
     all_chaps = [(p,c) for p in plan.get("parties",[]) for c in p.get("chapitres",[])]
     total = len(all_chaps)
-    chapters_md, summaries = [], []
     system = PromptLibrary.load("system")
-    bar   = st.progress(0)
-    info  = st.empty()
 
-    for i,(partie,chap) in enumerate(all_chaps):
-        n = i+1
+    if "g_chapters_done" not in st.session_state:
+        st.session_state.g_chapters_done = []
+    if "g_summaries" not in st.session_state:
+        st.session_state.g_summaries = []
+
+    already_done = len(st.session_state.g_chapters_done)
+    bar  = st.progress(int(already_done / total * 72))
+    info = st.empty()
+
+    for i, (partie, chap) in enumerate(all_chaps):
+        if i < already_done:
+            continue
+
+        n = i + 1
         info.info(f"✍️ Chapitre {n}/{total} : **{chap['titre']}**")
         bar.progress(int((n-1)/total*72))
+
+        resumes = "\n".join(st.session_state.g_summaries) or "(premier chapitre)"
         user = PromptLibrary.render("chapter",
             titre_ebook=plan.get("titre",""), sous_titre=plan.get("sous_titre",""),
             audience=gen.spec.audience, ton=gen.spec.ton,
             chapitre_json=json.dumps(chap, ensure_ascii=False, indent=2),
-            resumes_chapitres_precedents="\n".join(summaries) or "(premier chapitre)")
-        md = gen.client.call("claude-sonnet-4-6", system, user, 16000)
-        chapters_md.append(md)
-        summaries.append(f"Ch {chap.get('numero',n)} : {chap['titre']}")
+            resumes_chapitres_precedents=resumes)
 
-    gen.progress.chapters_md = chapters_md
+        md = gen.client.call("claude-sonnet-4-6", system, user, 16000)
+
+        # Sauvegarder immédiatement
+        st.session_state.g_chapters_done.append(md)
+        st.session_state.g_summaries.append(f"Ch {chap.get('numero',n)} : {chap['titre']}")
+
+    gen.progress.chapters_md = st.session_state.g_chapters_done
+
     info.info("📎 Bonus..."); bar.progress(82)
     gen.generate_bonus()
-    info.info("🖨️ Export PDF / DOCX / EPUB..."); bar.progress(93)
+    info.info("🖨️ Export PDF..."); bar.progress(93)
     files = gen.render_outputs()
     bar.progress(100); info.empty()
+
+    del st.session_state.g_chapters_done
+    del st.session_state.g_summaries
+
     return files, gen.client.total_cost_usd
 
 # ── SIDEBAR ──────────────────────────────────────────────────
