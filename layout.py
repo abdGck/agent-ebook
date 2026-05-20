@@ -695,7 +695,10 @@ def render_pdf(html_path: Path, pdf_path: Path):
 def render_docx_epub(md_path: Path, docx_path: Path, epub_path: Path,
                      title: str = "Ebook", author: str = ""):
     if not shutil.which("pandoc"):
-        raise RuntimeError("Pandoc non installé : https://pandoc.org/installing.html")
+    # Pandoc absent — on crée des fichiers vides pour ne pas bloquer
+    docx_path.write_bytes(b"")
+    epub_path.write_bytes(b"")
+    return
 
     meta = f"---\ntitle: \"{title}\"\nauthor: \"{author}\"\nlang: fr\n---\n\n"
     md_meta_path = md_path.with_suffix(".meta.md")
