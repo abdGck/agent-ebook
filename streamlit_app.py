@@ -393,6 +393,7 @@ if mode == "reformat":
         with st.form("f_rf_params"):
             c1, c2 = st.columns(2)
             with c1:
+                rf_pages    = st.slider("Nombre de pages visées", 15, 100, 35, 5)
                 rf_charte   = st.selectbox("Charte", ["solaire — Navy + Amber",
                     "agriculture — Vert + Ocre","premium — Marine + Cuivre","pedago — Terracotta + Crème"])
                 rf_audience = st.selectbox("Audience", ["Grand public débutant",
@@ -407,7 +408,7 @@ if mode == "reformat":
 
         if rf_go:
             spec_data = {"sujet": st.session_state.r_filename,
-                "audience":rf_audience, "pages":30, "ton":rf_ton,
+                "audience":rf_audience, "pages":rf_pages, "ton":rf_ton,
                 "charte":rf_charte.split(" — ")[0],
                 "auteur":rf_auteur, "auteur_role":rf_role,
                 "volume_label":rf_volume, "notes":""}

@@ -19,20 +19,56 @@ html, body {
 
 /* ================ STRUCTURE PAGE ================ */
 .page {
-  width: 210mm; height: 297mm;
-  padding: 25mm 22mm 22mm 22mm;
-  page-break-after: always; page-break-inside: avoid;
-  position: relative; background: var(--white); overflow: hidden;
+  width: 210mm;
+  height: 297mm;
+  padding: 20mm 18mm 18mm 18mm;
+  page-break-after: always;
+  page-break-inside: avoid;
+  position: relative;
+  background: var(--white);
+  overflow: hidden;
+  box-sizing: border-box;
 }
-.page:last-child { page-break-after: auto; }
 
-/* v2 — Les pages de contenu n'ont pas de hauteur fixe :
-   le contenu détermine la hauteur, Chromium pagine naturellement.
-   On garde page-break-after pour forcer une nouvelle page après chaque section. */
 .content-page {
-  height: auto;
-  min-height: 220mm;
-  overflow: visible;
+  height: 297mm;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+p {
+  font-size: 10pt;
+  line-height: 1.6;
+  margin-bottom: 4mm;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+h2 {
+  font-size: 14pt;
+  margin-top: 6mm;
+  margin-bottom: 3mm;
+  word-wrap: break-word;
+}
+
+h3 {
+  font-size: 11pt;
+  margin-top: 4mm;
+  margin-bottom: 2mm;
+}
+
+table {
+  width: 100%;
+  table-layout: fixed;
+  word-wrap: break-word;
+  font-size: 9pt;
+}
+
+td, th {
+  overflow: hidden;
+  word-wrap: break-word;
+  padding: 2mm 3mm;
 }
 
 /* ================ TYPOGRAPHIE ================ */
@@ -306,27 +342,57 @@ strong { font-weight: 600; color: var(--primary); }
 .chapter-opener-bottom ul { counter-reset: chapsec; }
 
 /* ================ CONTENU INTÉRIEUR ================ */
-.content-page { padding-top: 25mm; padding-bottom: 18mm; }
-.content-page h2 {
-  font-size: 21pt; font-weight: 500; color: var(--primary);
-  margin-bottom: 5mm; letter-spacing: -0.3px;
+.page {
+  width: 210mm;
+  height: 297mm;
+  padding: 20mm 18mm 18mm 18mm;
+  page-break-after: always;
+  page-break-inside: avoid;
+  position: relative;
+  background: var(--white);
+  overflow: hidden;
+  box-sizing: border-box;
 }
-.content-page h2 .h2-num {
-  font-family: 'Lora', serif; color: var(--accent);
-  font-weight: 400; margin-right: 4mm;
+
+.content-page {
+  height: 297mm;
+  overflow: hidden;
+  box-sizing: border-box;
 }
-.content-page h3 {
-  font-family: 'Poppins', sans-serif; font-size: 10.5pt;
-  color: var(--primary); font-weight: 600; text-transform: uppercase;
-  letter-spacing: 1.5px; margin: 6mm 0 2.5mm 0;
-  padding-bottom: 1.5mm; border-bottom: 1px solid var(--accent);
-  display: inline-block;
+
+p {
+  font-size: 10pt;
+  line-height: 1.6;
+  margin-bottom: 4mm;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
 }
-.content-page p { margin-bottom: 3mm; font-size: 10.5pt; line-height: 1.55; }
-.dropcap::first-letter {
-  font-family: 'Lora', serif; font-size: 36pt;
-  float: left; line-height: 0.85;
-  margin: 2mm 3mm -1mm 0; color: var(--accent); font-weight: 500;
+
+h2 {
+  font-size: 14pt;
+  margin-top: 6mm;
+  margin-bottom: 3mm;
+  word-wrap: break-word;
+}
+
+h3 {
+  font-size: 11pt;
+  margin-top: 4mm;
+  margin-bottom: 2mm;
+}
+
+table {
+  width: 100%;
+  table-layout: fixed;
+  word-wrap: break-word;
+  font-size: 9pt;
+}
+
+td, th {
+  overflow: hidden;
+  word-wrap: break-word;
+  padding: 2mm 3mm;
 }
 
 /* ================ ENCADRÉS ================ */
