@@ -279,6 +279,10 @@ with st.sidebar:
         for k,v in DEFAULTS.items():
             st.session_state[k] = v
         st.rerun()
+        st.markdown("---")
+    if st.button("🚪 Se déconnecter", use_container_width=True):
+        st.session_state.authenticated = False
+        st.rerun()
 
 # ── TITRE PRINCIPAL ──────────────────────────────────────────
 st.markdown("# 📚 Agent Ebook")
