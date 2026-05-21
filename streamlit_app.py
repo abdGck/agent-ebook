@@ -188,7 +188,10 @@ if check_password():
     with st.sidebar:
         st.markdown("## 📚 Agent Ebook")
         st.markdown("---")
-        st.success("🟢 Mode Live") if has_api else st.warning("🟡 Mode Démo")
+        if has_api:
+         st.success("🟢 Mode Live")
+else:
+        st.warning("🟡 Mode Démo")
         st.markdown("---")
         st.markdown("### Navigation")
         mode = st.radio("", options=["generate","reformat"],
@@ -204,14 +207,14 @@ if check_password():
             st.session_state["authenticated"] = False
             st.rerun()
 
-    st.markdown("# 📚 Agent Ebook")
-    st.markdown("---")
+        st.markdown("# 📚 Agent Ebook")
+        st.markdown("---")
 
     # ════════════════════════════════════════════
     #   MODE GÉNÉRATION
     # ════════════════════════════════════════════
-    if mode == "generate":
-        st.markdown("### ✨ Générer un nouvel ebook")
+        if mode == "generate":
+            st.markdown("### ✨ Générer un nouvel ebook")
         step = st.session_state.g_step
 
         if step == "form":
@@ -281,8 +284,8 @@ if check_password():
     # ════════════════════════════════════════════
     #   MODE REFORMATAGE
     # ════════════════════════════════════════════
-    if mode == "reformat":
-        st.markdown("### 📂 Reformater un ebook existant")
+        if mode == "reformat":
+               st.markdown("### 📂 Reformater un ebook existant")
         step = st.session_state.r_step
 
         if step == "upload":
