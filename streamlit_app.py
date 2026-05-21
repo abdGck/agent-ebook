@@ -19,29 +19,30 @@ st.set_page_config(page_title="Agent Ebook", page_icon="📚", layout="wide")
 def check_password():
     if st.session_state.get("authenticated"):
         return True
+    
     st.markdown("# 📚 Agent Ebook")
     st.markdown("### Connexion requise")
+    
     with st.form("login_form"):
         username = st.text_input("Identifiant")
         password = st.text_input("Mot de passe", type="password")
         submitted = st.form_submit_button("Se connecter", use_container_width=True)
+    
     if submitted:
-        if username == st.secrets.get("APP_USER", "yeelenebook") and \
-           password == st.secrets.get("APP_PASSWORD", "adminebook26"):
+        try:
+            expected_user = st.secrets["APP_USER"]
+            expected_pass = st.secrets["APP_PASSWORD"]
+        except Exception:
+            expected_user = "yeelenebook"
+            expected_pass = "adminebook26"
+        
+        if username.strip() == expected_user.strip() and \
+           password.strip() == expected_pass.strip():
             st.session_state.authenticated = True
             st.rerun()
         else:
-            st.error("❌ Identifiant ou mot de passe incorrect.")
+            st.error(f"❌ Incorrect. Attendu : '{expected_user}' / '{expected_pass}'")
     return False
-
-if not check_password():
-    st.stop()
-
-# ── IMPORTS GÉNÉRATEUR ──
-from generator import (
-    BookGenerator, BookSpec,
-    EbookReformatter, extract_text_from_file, PromptLibrary
-)
 
 # ── CONFIG ──────────────────────────────────────────────────
 
