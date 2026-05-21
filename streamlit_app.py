@@ -189,9 +189,9 @@ if check_password():
         st.markdown("## 📚 Agent Ebook")
         st.markdown("---")
         if has_api:
-    st.success("🟢 Mode Live")
-else:
-    st.warning("🟡 Mode Démo")
+            st.success("🟢 Mode Live")
+        else:
+            st.warning("🟡 Mode Démo")
         st.markdown("---")
         st.markdown("### Navigation")
         mode = st.radio("", options=["generate","reformat"],
