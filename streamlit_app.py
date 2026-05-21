@@ -44,31 +44,6 @@ from generator import (
 )
 
 # ── CONFIG ──────────────────────────────────────────────────
-# ── AUTHENTIFICATION ────────────────────────────────────────
-def check_password():
-    """Affiche un formulaire de connexion et retourne True si identifiants corrects."""
-    if st.session_state.get("authenticated"):
-        return True
-
-    st.markdown("# 📚 Agent Ebook")
-    st.markdown("### Connexion")
-
-    with st.form("login_form"):
-        username = st.text_input("Identifiant")
-        password = st.text_input("Mot de passe", type="password")
-        submitted = st.form_submit_button("Se connecter", use_container_width=True)
-
-    if submitted:
-        if username == st.secrets.get("APP_USER", "yeelenebook") and \
-           password == st.secrets.get("APP_PASSWORD", "adminebook26"):
-            st.session_state.authenticated = True
-            st.rerun()
-        else:
-            st.error("Identifiant ou mot de passe incorrect.")
-    return False
-
-if not check_password():
-    st.stop()
 
 st.set_page_config(page_title="Agent Ebook", page_icon="📚", layout="wide")
 
