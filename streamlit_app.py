@@ -17,31 +17,29 @@ st.set_page_config(page_title="Agent Ebook", page_icon="📚", layout="wide")
 
 # ── AUTHENTIFICATION ──
 def check_password():
-    if st.session_state.get("authenticated"):
+    if st.session_state.get("authenticated") is True:
         return True
     
     st.markdown("# 📚 Agent Ebook")
     st.markdown("### Connexion requise")
     
-    with st.form("login_form"):
-        username = st.text_input("Identifiant")
-        password = st.text_input("Mot de passe", type="password")
-        submitted = st.form_submit_button("Se connecter", use_container_width=True)
-    
-    if submitted:
-        try:
-            expected_user = st.secrets["APP_USER"]
-            expected_pass = st.secrets["APP_PASSWORD"]
-        except Exception:
-            expected_user = "yeelenebook"
-            expected_pass = "adminebook26"
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        with st.form("login_form"):
+            username = st.text_input("Identifiant")
+            password = st.text_input("Mot de passe", type="password")
+            submitted = st.form_submit_button("Se connecter", 
+                type="primary", use_container_width=True)
         
-        if username.strip() == expected_user.strip() and \
-           password.strip() == expected_pass.strip():
-            st.session_state.authenticated = True
-            st.rerun()
-        else:
-            st.error(f"❌ Incorrect. Attendu : '{expected_user}' / '{expected_pass}'")
+        if submitted:
+            user_ok = username.strip() == "yeelenebook"
+            pass_ok = password.strip() == "adminebook26"
+            if user_ok and pass_ok:
+                st.session_state["authenticated"] = True
+                st.rerun()
+            else:
+                st.error("❌ Identifiant ou mot de passe incorrect.")
+    
     return False
 
 # ── CONFIG ──────────────────────────────────────────────────
